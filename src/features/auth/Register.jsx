@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { signup } from "../../utils/auth";
 import toast from "react-hot-toast";
 import KwuoLoader from "../../components/KwuoLoader";
+import AuthLayout from "../../layout/AuthLayout";
 
 export default function Register() {
   const [email, setEmail] = useState("");

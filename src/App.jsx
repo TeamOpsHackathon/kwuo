@@ -6,13 +6,16 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
 import { LoadingProvider, useLoading } from "./components/ContextProvider";
 import KwuoLoader from "./components/KwuoLoader";
 
 // Lazy loaded components for code splitting
-const AuthPage = lazy(() => import("./components/Register"));
-const Dashboard = lazy(() => import("./components/DashBoard"));
-const NotFound = lazy(() => import("./components/NotFound"));
+const AuthPage = lazy(() => import("./features/auth/Register"));
+const Dashboard = lazy(() => import("./features/auth/dashboard/DashBoard"));
+const NotFound = lazy(() => import("./layout/NotFound"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
 
 // Layout wrapper to show/hide loader during route changes
 const RouteChangeListener = ({ children }) => {
@@ -83,7 +86,7 @@ function App() {
                 }
               />
               <Route
-                path="/home.."
+                path="/home"
                 element={
                   <PrivateRoute>
                     <HomePage />
