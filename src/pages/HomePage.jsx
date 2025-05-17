@@ -15,20 +15,23 @@ const pageVariants = {
 // Dummy news data for rendering cards
 const defaultPosts = [
   {
-    title: "Lagos flood disrupts businesses in Surulere",
-    imgSrc: "https://via.placeholder.com/300x150",
+    title: "Mrs Precillia Otti",
+    imgSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQFE-jFAHofNcb_eCqFkzMqn_f7rCPsXcgEg&s",
     time: "1 hour ago",
     author: "Jane Doe",
   },
   {
-    title: "Tech startup raises $10M in Series A",
-    imgSrc: "https://via.placeholder.com/300x150",
+    title: "Favour Abia, says Ikpeazu",
+    imgSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTtZlcvEC0YY_ZmgH_pCnTzvNiJx5cFJuVKA&s",
     time: "2 hours ago",
     author: "John Smith",
   },
   {
-    title: "Students protest hike in tuition fees",
-    imgSrc: "https://via.placeholder.com/300x150",
+    title: "Abia governor swears in 16 local government",
+    imgSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHhhhplj8YeWdrElNT8RPBH58pwsJuNNT4SQ&s",
     time: "3 hours ago",
     author: "Fatima Balogun",
   },

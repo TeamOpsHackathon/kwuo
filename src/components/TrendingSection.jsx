@@ -1,12 +1,22 @@
 import React from "react";
 import NewsCard from "./NewsCard";
 
-const sampleNews = {
-  title: "Nigeria crime journalist wounded in Toll gate shooting",
-  imgSrc: "/images/shooting.jpg", // Replace with real asset
-  time: "2 hours ago",
-  author: "Amy Adams",
-};
+const sampleNews = [
+  {
+    title: "Abayi Girls School Aba",
+    imgSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFBBFK4eOoa_uSRwLEJi5YRQpe0My61pD-pQ&s", // Replace with real asset
+    time: "2 hours ago",
+    author: "Amy Adams",
+  },
+  {
+    title: "Abayi Girls School Aba",
+    imgSrc:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFBBFK4eOoa_uSRwLEJi5YRQpe0My61pD-pQ&s", // Replace with real asset
+    time: "2 hours ago",
+    author: "Amy Adams",
+  },
+];
 
 const TrendingSection = () => {
   return (
@@ -16,7 +26,7 @@ const TrendingSection = () => {
         <button className="text-green-600 text-sm">See All</button>
       </div>
       <div className="flex overflow-x-auto scrollbar-hide">
-        {[1, 2].map((i) => (
+        {sampleNews.map((i) => (
           <NewsCard key={i} {...sampleNews} />
         ))}
       </div>
