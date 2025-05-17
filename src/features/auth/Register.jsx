@@ -277,7 +277,10 @@ const Register = () => {
         </p>
 
         <button
-          onClick={() => showToast("Google sign in (mocked)", "info")}
+          onClick={() => {
+            showToast("Google sign in (mocked)", "info");
+            navigate("/home");
+          }}
           className="w-full bg-white text-gray-700 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 transition shadow-md flex items-center justify-center space-x-3"
         >
           <GoogleIcon />
