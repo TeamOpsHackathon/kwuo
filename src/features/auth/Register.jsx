@@ -2,24 +2,25 @@ import React, { useState, useRef, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // Mock array-based "database"
 const mockUsers = [
   {
     id: 1,
     username: "fletcher",
-    phone: "08012345678",
+    // phone: "08012345678",
     email: "mmcvanamy0@e-recht24.de",
     password: "password123",
-    pin: "123456",
+    // pin: "123456",
   },
   {
     id: 2,
     username: "clarice",
-    phone: "08087654321",
+    // phone: "08087654321",
     email: "charrild1@dion.ne.jp",
     password: "testpass",
-    pin: "654321",
+    // pin: "654321",
   },
 ];
 
@@ -63,9 +64,7 @@ const Register = () => {
   const [users, setUsers] = useState([...mockUsers]);
 
   const [formData, setFormData] = useState({
-    phone: "",
     username: "",
-    pin: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -88,66 +87,137 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isLogin) {
-      // Login logic: match email/phone and pin
-      const user = users.find(
-        (u) =>
-          (u.email === formData.email || u.phone === formData.email) &&
-          u.pin === formData.pin
-      );
-      if (user) {
-        showToast("Login successful!", "success");
+  // DUMMY CREATION OF ACCOUNT
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-        // Add your post-login logic here
-        navigate("/home");
-      } else {
-        showToast("Invalid credentials. Please try again.", "error");
-      }
-    } else {
-      if (stage === 2) {
-        // Registration logic: check for duplicates
-        const exists = users.some(
-          (u) =>
-            u.username === formData.username ||
-            u.phone === formData.phone ||
-            u.email === formData.email
+  //   if (isLogin) {
+  //     // Login logic: match email/phone and pin
+  //     const user = users.find(
+  //       (u) =>
+  //         (u.email === formData.email || u.username === formData.username) &&
+  //         u.password === formData.password
+  //     );
+  //     if (user) {
+  //       showToast("Login successful!", "success");
+
+  //       // Add your post-login logic here
+  //       navigate("/home");
+  //     } else {
+  //       showToast("Invalid credentials. Please try again.", "error");
+  //     }
+  //   } else {
+  //     if (stage === 2) {
+  //       // Registration logic: check for duplicates
+  //       const exists = users.some(
+  //         (u) =>
+  //           u.username === formData.username ||
+  //           // u.phone === formData.phone ||
+  //           u.email === formData.email
+  //       );
+  //       if (exists) {
+  //         showToast(
+  //           "User already exists with this username, phone, or email.",
+  //           "error"
+  //         );
+  //         return;
+  //       }
+  //       if (formData.password !== formData.confirmPassword) {
+  //         showToast("Passwords do not match.", "error");
+  //         return;
+  //       }
+  //       // Add new user to mock "database"
+
+  //       const newUser = {
+  //         id: users.length + 1,
+  //         username: formData.username,
+  //         email: formData.email,
+  //         password: formData.password,
+  //       };
+
+  //       setUsers([...users, newUser]);
+  //       showToast("Account created successfully!", "success");
+
+  //       // Reset form
+  //       setIsLogin(true);
+  //       setStage(1);
+  //       // setCodeSent(
+  //       setFormData({
+  //         username: "",
+  //         email: "",
+  //         password: "",
+  //         confirmPassword: "",
+  //       });
+  //       // );
+  //     }
+  //     showToast("Account created successfully!", "success");
+  //     navigate("/home");
+  //   }
+  // };
+
+  // REAL MANAGEMENT OF ACCOUTN
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (isLogin) {
+        // Login logic
+        const response = await axios.post(
+          "https://kwuo.onrender.com/api/auth/login",
+          {
+            identifier: formData.email || formData.username,
+            password: formData.password,
+          }
         );
-        if (exists) {
-          showToast(
-            "User already exists with this username, phone, or email.",
-            "error"
+
+        if (response.status === 200) {
+          showToast("Login successful!", "success");
+          navigate("/home");
+        }
+      } else {
+        if (stage === 2) {
+          // Registration logic
+          if (formData.password !== formData.confirmPassword) {
+            showToast("Passwords do not match.", "error");
+            return;
+          }
+
+          const response = await axios.post(
+            "https://kwuo.onrender.com/api/auth/register",
+            {
+              username: formData.username,
+              email: formData.email,
+              password: formData.password,
+            }
           );
-          return;
+
+          if (response.status === 201 || response.status === 200) {
+            showToast(
+              "Account created successfully, proceed to login!",
+              "success"
+            );
+            setIsLogin(true);
+            setStage(1);
+            setFormData({
+              username: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            });
+            navigate("/home");
+          }
         }
-        if (formData.password !== formData.confirmPassword) {
-          showToast("Passwords do not match.", "error");
-          return;
-        }
-        // Add new user to mock "database"
-        const newUser = {
-          id: users.length + 1,
-          username: formData.username,
-          phone: formData.phone,
-          email: formData.email || `${formData.username}@mock.com`,
-          password: formData.password,
-          pin: formData.pin || codeDigits.join(""),
-        };
-        setUsers([...users, newUser]);
-        showToast("Account created successfully!", "success");
-        setIsLogin(true);
-        setStage(1);
-        setCodeSent(false);
-        setCodeDigits(Array(6).fill(""));
-        setFormData({
-          phone: "",
-          username: "",
-          pin: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        showToast(error.response.data.message, "error");
+      } else {
+        showToast("Something went wrong. Please try again.", "error");
       }
     }
   };
@@ -162,50 +232,43 @@ const Register = () => {
     }, 1000);
   };
 
-  const handleSendCode = () => {
-    setCodeSent(true);
-    startCountdown();
-    showToast("Verification code sent (mocked: 123456)", "info");
-    // In a real app, you'd send a code here
-  };
+  // const handleSendCode = () => {
+  //   setCodeSent(true);
+  //   startCountdown();
+  //   showToast("Verification code sent (mocked: 123456)", "info");
+  //   // In a real app, you'd send a code here
+  // };
 
-  const handleCodeChange = (e, index) => {
-    const value = e.target.value.replace(/\D/g, "");
-    const newDigits = [...codeDigits];
-    newDigits[index] = value;
-    setCodeDigits(newDigits);
+  // const handleCodeChange = (e, index) => {
+  //   const value = e.target.value.replace(/\D/g, "");
+  //   const newDigits = [...codeDigits];
+  //   newDigits[index] = value;
+  //   setCodeDigits(newDigits);
 
-    if (value && index < 5) inputRefs.current[index + 1].focus();
-    if (index === 5 && value) handleVerifyCode(newDigits.join(""));
-  };
+  //   if (value && index < 5) inputRefs.current[index + 1].focus();
+  //   if (index === 5 && value) handleVerifyCode(newDigits.join(""));
+  // };
 
-  const handleVerifyCode = (code) => {
-    // For mock, accept only "123456"
-    if (code === "123456") {
-      setFormData((prev) => ({ ...prev, pin: code }));
-      setStage(2);
-      showToast("Code verified!", "success");
-    } else {
-      showToast("Invalid verification code.", "error");
-      setCodeDigits(Array(6).fill(""));
-    }
-  };
+  // const handleVerifyCode = (code) => {
+  //   // For mock, accept only "123456"
+  //   if (code === "123456") {
+  //     setFormData((prev) => ({ ...prev, pin: code }));
+  //     setStage(2);
+  //     showToast("Code verified!", "success");
+  //   } else {
+  //     showToast("Invalid verification code.", "error");
+  //     setCodeDigits(Array(6).fill(""));
+  //   }
+  // };
 
   const toggleRef = useRef(null);
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setStage(1);
-    setCodeSent(false);
-    setCodeDigits(Array(6).fill(""));
-    setFormData({
-      phone: "",
-      username: "",
-      pin: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    // setCodeSent(false);
+    // setCodeDigits(Array(6).fill(""));
+    setFormData({ email: "", password: "", confirmPassword: "" });
   };
 
   return (
@@ -299,7 +362,7 @@ const Register = () => {
           {!isLogin && (
             <div className="space-y-1">
               <label className="block text-sm font-medium text-green-700">
-                Username
+                Email
               </label>
               <input
                 type="text"
@@ -308,7 +371,7 @@ const Register = () => {
                 value={formData.username}
                 onChange={handleChange}
                 className="w-full p-3 pl-4 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-green-50/50"
-                placeholder="Choose a username"
+                placeholder="Enter email Address"
               />
             </div>
           )}
@@ -328,19 +391,19 @@ const Register = () => {
                   className="w-full p-3 pl-4 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-green-50/50"
                   placeholder="e.g. 08012345678"
                 />
-                <button
+                {/* <button
                   type="button"
                   onClick={handleSendCode}
                   disabled={countdown > 0}
                   className="px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                 >
                   {countdown > 0 ? `Resend (${countdown}s)` : "Send"}
-                </button>
+                </button> */}
               </div>
             </div>
           )}
 
-          {!isLogin && codeSent && stage === 1 && (
+          {/* {!isLogin && codeSent && stage === 1 && (
             <div className="space-y-1">
               <label className="block text-sm font-medium text-green-700">
                 Verification Code
@@ -360,9 +423,9 @@ const Register = () => {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
-          {!isLogin && stage === 2 && (
+          {!isLogin && stage === 1 && (
             <>
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-green-700">
@@ -399,40 +462,40 @@ const Register = () => {
             <>
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-green-700">
-                  Email or Phone
+                  Email
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   name="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full p-3 pl-4 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-green-50/50"
-                  placeholder="Enter email or phone"
+                  placeholder="Enter email"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <label className="block text-sm font-medium text-green-700">
-                    PIN
+                    Password
                   </label>
-                  <button
-                    type="button"
-                    className="text-sm text-green-600 hover:text-green-800"
-                  >
-                    Forgot PIN?
-                  </button>
                 </div>
                 <input
                   type="password"
                   name="pin"
                   required
-                  value={formData.pin}
+                  value={formData.password}
                   onChange={handleChange}
                   className="w-full p-3 pl-4 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-green-50/50"
-                  placeholder="Enter your 6-digit PIN"
+                  placeholder="Enter your password"
                   maxLength={6}
                 />
+                <button
+                  type="button"
+                  className="text-sm mt-3 text-green-600 hover:text-green-800"
+                >
+                  Forgotten Password ?
+                </button>
               </div>
             </>
           )}
@@ -442,11 +505,7 @@ const Register = () => {
             className="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-200 flex items-center justify-center space-x-2 mt-8"
           >
             <span className="font-medium">
-              {isLogin
-                ? "Log In"
-                : stage === 2
-                ? "Create Account"
-                : "Verify Code"}
+              {isLogin ? "Log In" : stage === 2 ? "Create Account" : "Continue"}
             </span>
           </button>
         </form>
@@ -467,5 +526,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;
