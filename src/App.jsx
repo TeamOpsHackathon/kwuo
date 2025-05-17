@@ -1,12 +1,18 @@
-import React, { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { LoadingProvider, useLoading } from './components/ContextProvider';
-import KwuoLoader from './components/KwuoLoader';
+import React, { lazy, Suspense, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { LoadingProvider, useLoading } from "./components/ContextProvider";
+import KwuoLoader from "./components/KwuoLoader";
 
 // Lazy loaded components for code splitting
-const AuthPage = lazy(() => import('./components/Register'));
-const Dashboard = lazy(() => import('./components/DashBoard'));
-const NotFound = lazy(() => import('./components/NotFound'));
+const AuthPage = lazy(() => import("./components/Register"));
+const Dashboard = lazy(() => import("./components/DashBoard"));
+const NotFound = lazy(() => import("./components/NotFound"));
 
 // Layout wrapper to show/hide loader during route changes
 const RouteChangeListener = ({ children }) => {
@@ -14,7 +20,7 @@ const RouteChangeListener = ({ children }) => {
   const { startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
-    startLoading('Loading page...', 800);
+    startLoading("Loading page...", 800);
     return () => stopLoading();
   }, [location.pathname]); // Trigger on route change
 
@@ -31,7 +37,7 @@ const SuspenseFallback = () => (
 // Private route component for protected routes
 const PrivateRoute = ({ children }) => {
   // Check if user is authenticated - replace with your actual auth check
-  const isAuthenticated = localStorage.getItem('kwuo_auth_token');
+  const isAuthenticated = localStorage.getItem("kwuo_auth_token");
 
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
@@ -51,10 +57,11 @@ function App() {
             <Routes>
               {/* Public routes */}
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
 
               {/* Protected routes */}
               <Route
-                path="/dashboard"
+                path="/dashboardmm"
                 element={
                   <PrivateRoute>
                     <Dashboard />
