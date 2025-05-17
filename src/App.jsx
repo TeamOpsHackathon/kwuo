@@ -6,16 +6,16 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import { Toaster, toast } from "react-hot-toast";
 import { LoadingProvider, useLoading } from "./components/ContextProvider";
 import KwuoLoader from "./components/KwuoLoader";
+import { Toaster, toast } from "react-hot-toast";
 
 // Lazy loaded components for code splitting
 const AuthPage = lazy(() => import("./features/auth/Register"));
+const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
+
 const Dashboard = lazy(() => import("./features/auth/dashboard/DashBoard"));
 const NotFound = lazy(() => import("./layout/NotFound"));
-const HomePage = lazy(() => import("./pages/HomePage"));
-const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
 
 // Layout wrapper to show/hide loader during route changes
 const RouteChangeListener = ({ children }) => {
@@ -74,7 +74,7 @@ function App() {
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
 
-              <Route path="/home" element={<HomePage />} />
+              {/* <Route path="/home" element={<HomePage />} /> */}
 
               {/* Protected routes */}
               <Route
@@ -85,22 +85,22 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/home"
+              {/* <Route
+                path="/home.."
                 element={
                   <PrivateRoute>
                     <HomePage />
                   </PrivateRoute>
                 }
-              />
-              <Route
+              /> */}
+              {/* <Route
                 path="/create-post"
                 element={
                   <PrivateRoute>
                     <CreatePostPage />
                   </PrivateRoute>
                 }
-              />
+              /> */}
 
               {/* Redirect root based on auth */}
               <Route

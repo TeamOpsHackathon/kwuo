@@ -49,7 +49,7 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const Register = () => {
+const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [stage, setStage] = useState(1);
   const [codeSent, setCodeSent] = useState(false);
@@ -461,4 +461,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default AuthPage;
