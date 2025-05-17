@@ -10,9 +10,9 @@ const FeaturedArticle = () => {
       transition={{ duration: 0.6 }}
     >
       <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPJ2eLrzNsVxKyeE0JpDj_g9obRVeXONSdEQ&s"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqYLHUD-cV_pmh1H-4eQmXtVBYpZiyp0Wf8w&s"
         alt="Featured"
-        className="w-full h-60 object-cover rounded-xl"
+        className="w-md h-60 object-cover rounded-xl"
       />
       <div className="absolute bottom-6 left-6 text-white max-w-xs background-black">
         <p className="text-sm opacity-80">15-05-2025 · 3 min read</p>
