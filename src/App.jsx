@@ -15,7 +15,9 @@ const AuthPage = lazy(() => import("./features/auth/Register"));
 const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const Dashboard = lazy(() => import("./features/auth/dashboard/DashBoard"));
+
 const NotFound = lazy(() => import("./layout/NotFound"));
+// const profile = lazy(() => import("./layout/NotFound"));
 
 // Layout wrapper to show/hide loader during route changes
 const RouteChangeListener = ({ children }) => {

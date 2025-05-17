@@ -14,7 +14,7 @@ const NotFound = () => {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Link
-          to="/auth"
+          to="/home"
           className="inline-block bg-green-600 text-white py-3 px-6 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-200"
         >
           Return to Homepage

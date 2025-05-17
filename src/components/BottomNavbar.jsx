@@ -47,7 +47,7 @@ const BottomNavbar = () => {
       <button onClick={() => navigate("/notifications")}>
         <Bell className={iconClass} />
       </button>
-      <button onClick={() => navigate("/profile")}>
+      <button onClick={() => navigate("/dashboard")}>
         <User className={iconClass} />
       </button>
     </motion.div>

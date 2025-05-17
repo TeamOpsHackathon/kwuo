@@ -1,5 +1,6 @@
 import React from "react";
 import KwuoLoader from "../../../components/KwuoLoader";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const handleReset = () => {
@@ -8,6 +9,7 @@ const Dashboard = () => {
     window.location.reload();
   };
 
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-4">
       <div className="max-w-screen-xl mx-auto">
@@ -18,10 +20,13 @@ const Dashboard = () => {
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="bg-green-100 text-green-800 px-4 py-2 rounded-full hover:bg-green-200 transition">
-              Profile
+            <button
+              onClick={() => navigate("/home")}
+              className="bg-green-300 text-green-800 px-4 py-2 rounded-md hover:bg-green-200 transition"
+            >
+              Home
             </button>
-            <button className="bg-red-100 text-red-800 px-4 py-2 rounded-full hover:bg-red-200 transition">
+            <button className="bg-red-300 text-red-800 px-4 py-2 rounded-md hover:bg-red-200 transition">
               Logout
             </button>
           </div>
