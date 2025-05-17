@@ -1,11 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Home, Search, PlusCircle, Bell, User } from "lucide-react"; // ✅ Import Lucide icons
 
+import CreatePostModal from "../post/CreatePostModal";
+
 const BottomNavbar = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleAddPost = () => {
     fileInputRef.current.click();
@@ -34,16 +37,17 @@ const BottomNavbar = () => {
       <button onClick={() => navigate("/search")}>
         <Search className={iconClass} />
       </button>
-      <button onClick={handleAddPost}>
-        <PlusCircle className={`${iconClass} text-green-600`} />
+      <button
+        onClick={() => setShowModal(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        <PlusCircle className={`${iconClass} `} />
+
+        {showModal && (
+          <CreatePostModal closeModal={() => setShowModal(false)} />
+        )}
       </button>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleFileChange}
-      />
+
       <button onClick={() => navigate("/notifications")}>
         <Bell className={iconClass} />
       </button>

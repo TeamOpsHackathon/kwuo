@@ -12,7 +12,7 @@ import { Toaster, toast } from "react-hot-toast";
 
 // Lazy loaded components for code splitting
 const AuthPage = lazy(() => import("./features/auth/Register"));
-const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
+// const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const Dashboard = lazy(() => import("./features/auth/dashboard/DashBoard"));
 
