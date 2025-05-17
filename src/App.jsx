@@ -109,9 +109,9 @@ function App() {
                 path="/"
                 element={
                   localStorage.getItem("kwuo_auth_token") ? (
-                    <Navigate to="/home" replace />
-                  ) : (
                     <Navigate to="/auth" replace />
+                  ) : (
+                    <Navigate to="/home" replace />
                   )
                 }
               />
