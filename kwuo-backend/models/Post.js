@@ -18,29 +18,54 @@
 // const Post = mongoose.model("Post", postSchema);
 // export default Post;
 
-import mongoose from "mongoose";
 
-const postSchema = new mongoose.Schema(
-  {
-    content: { type: String, required: true },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    comments: [
-      {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        text: { type: String, required: true },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
-    shares: { type: Number, default: 0 },
+
+// 
+
+import mongoose from 'mongoose';
+
+const attachmentSchema = new mongoose.Schema({
+  url: { type: String, required: true },
+  filename: { type: String, required: true },
+  mimetype: { 
+    type: String, 
+    required: true,
+    enum: ['image/jpeg', 'image/png', 'application/pdf', 'video/mp4']
   },
-  { timestamps: true }
-);
+  size: { 
+    type: Number, 
+    required: true,
+    max: 50 * 1024 * 1024 // 50MB
+  }
+});
 
-const Post = mongoose.model("Post", postSchema);
+const postSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  body: { type: String, required: true },
+  attachments: [attachmentSchema],
+  createdBy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
+  role: {
+    type: String,
+    enum: ['citizen', 'official'],
+    required: true
+  },
+  approvals: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  }],
+  citizenComments: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'CitizenComment'  // Now properly referenced
+  }],
+  officialComments: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'OfficialComment'  // Now properly referenced
+  }]
+}, { timestamps: true });
 
-export default Post;
+
+export default mongoose.model('Post', postSchema);
