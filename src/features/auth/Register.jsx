@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 // Mock array-based "database"
 const mockUsers = [
@@ -56,6 +57,7 @@ const Register = () => {
   const [countdown, setCountdown] = useState(0);
   const [codeDigits, setCodeDigits] = useState(Array(6).fill(""));
   const inputRefs = useRef(Array(6).fill(null));
+  const navigate = useNavigate();
 
   // Local state for mock users (so changes persist in-session)
   const [users, setUsers] = useState([...mockUsers]);
@@ -97,7 +99,9 @@ const Register = () => {
       );
       if (user) {
         showToast("Login successful!", "success");
+
         // Add your post-login logic here
+        navigate("/home");
       } else {
         showToast("Invalid credentials. Please try again.", "error");
       }

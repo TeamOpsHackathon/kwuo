@@ -87,3 +87,5 @@ const HomePage = () => {
     </motion.div>
   );
 };
+
+export default HomePage;
