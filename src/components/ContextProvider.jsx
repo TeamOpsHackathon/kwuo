@@ -1,64 +1,112 @@
-import React, { createContext, useContext, useState } from 'react';
-import KwuoLoader from './KwuoLoader';
+import React, { lazy, Suspense } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 
-// Create loading context
-const LoadingContext = createContext({
-	isLoading: false,
-	message: 'Loading...',
-	startLoading: () => { },
-	stopLoading: () => { },
-	setLoadingMessage: () => { },
-});
+import { LoadingProvider, useLoading } from "./components/ContextProvider";
+import KwuoLoader from "./components/KwuoLoader";
+import { Toaster, toast } from "react-hot-toast";
 
-// Loading provider component
-export const LoadingProvider = ({ children }) => {
-	const [isLoading, setIsLoading] = useState(false);
-	const [message, setMessage] = useState('Loading...');
-	const [loadingTimeout, setLoadingTimeout] = useState(null);
+// Lazy loaded components
+const Register = lazy(() => import("./features/auth/Register"));
+const Login = lazy(() => import("./features/auth/Login"));
+const Dashboard = lazy(() => import("./features/auth/dashboard/DashBoard"));
+const NotFound = lazy(() => import("./layout/NotFound"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const CreatePostPage = lazy(() => import("./pages/CreatePostPage"));
 
-	const startLoading = (msg = 'Loading...', minimumTime = 500) => {
-		setIsLoading(true);
-		setMessage(msg);
+// Route change loader
+const RouteChangeListener = ({ children }) => {
+  const location = useLocation();
+  const { startLoading, stopLoading } = useLoading();
 
-		// Ensure loader shows for at least minimumTime milliseconds
-		if (loadingTimeout) clearTimeout(loadingTimeout);
-		const timeout = setTimeout(() => {
-			setIsLoading(false);
-		}, minimumTime);
-		setLoadingTimeout(timeout);
-	};
+  React.useEffect(() => {
+    startLoading("Loading page...", 800);
+    return () => stopLoading();
+  }, [location.pathname]);
 
-	const stopLoading = () => {
-		if (loadingTimeout) clearTimeout(loadingTimeout);
-		setLoadingTimeout(null);
-		setIsLoading(false);
-	};
-
-	const setLoadingMessage = (msg) => {
-		setMessage(msg);
-	};
-
-	return (
-		<LoadingContext.Provider
-			value={{
-				isLoading,
-				message,
-				startLoading,
-				stopLoading,
-				setLoadingMessage,
-			}}
-		>
-			{children}
-			{isLoading && (
-				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-					<div className="bg-white rounded-2xl p-8 shadow-2xl">
-						<KwuoLoader text={message} size="large" />
-					</div>
-				</div>
-			)}
-		</LoadingContext.Provider>
-	);
+  return <>{children}</>;
 };
 
-// Custom hook for using the loading context
-export const useLoading = () => useContext(LoadingContext);
+// Suspense fallback loader
+const SuspenseFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-green-50">
+    <KwuoLoader size="large" text="Loading Kwuo🌿..." />
+  </div>
+);
+
+// Private route wrapper
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("kwuo_auth_token");
+  if (!isAuthenticated) {
+    toast.error("You must be logged in to access this page");
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+function App() {
+  return (
+    <Router>
+      <LoadingProvider>
+        <RouteChangeListener>
+          <Suspense fallback={<SuspenseFallback />}>
+            <Routes>
+              {/* Auth routes */}
+              <Route path="/auth" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <PrivateRoute>
+                    <HomePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/create-post"
+                element={
+                  <PrivateRoute>
+                    <CreatePostPage />
+                  </PrivateRoute>
+                }
+              />
+
+              {/* Redirect root */}
+              <Route
+                path="/"
+                element={
+                  localStorage.getItem("kwuo_auth_token") ? (
+                    <Navigate to="/home" replace />
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+
+              {/* Fallback route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </RouteChangeListener>
+      </LoadingProvider>
+      <Toaster position="top-right" />
+    </Router>
+  );
+}
+
+export default App;
